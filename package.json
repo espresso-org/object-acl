@@ -1,7 +1,7 @@
 {
-  "name": "datastore-acl",
+  "name": "@espresso/object-acl",
   "version": "0.0.1",
-  "description": "DatastoreACL",
+  "description": "ObjectACL",
   "main": " ",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
