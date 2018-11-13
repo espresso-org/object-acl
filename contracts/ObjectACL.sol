@@ -4,9 +4,9 @@ import '@aragon/os/contracts/apps/AragonApp.sol';
 
 
 
-contract DatastoreACL is AragonApp, ACLHelpers {
+contract ObjectACL is AragonApp, ACLHelpers {
 
-    bytes32 public constant DATASTOREACL_ADMIN_ROLE = keccak256("DATASTOREACL_ADMIN_ROLE");
+    bytes32 public constant OBJECTACL_ADMIN_ROLE = keccak256("OBJECTACL_ADMIN_ROLE");
 
     event SetObjectPermission(address indexed entity, bytes32 indexed obj, bytes32 indexed role, bool allowed);
     event ChangeObjectPermissionManager(bytes32 indexed obj, bytes32 indexed role, address indexed manager);
@@ -52,7 +52,7 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     */
     function createObjectPermission(address _entity, bytes32 _obj, bytes32 _role, address _permissionManager)
         public
-        auth(DATASTOREACL_ADMIN_ROLE)
+        auth(OBJECTACL_ADMIN_ROLE)
     {
         _setObjectPermission(_entity, _obj, _role, true);
         _setObjectPermissionManager(_permissionManager, _obj, _role);
@@ -106,7 +106,7 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     */
     function grantObjectPermission(address _entity, bytes32 _obj, bytes32 _role, address _sender)
         public
-        auth(DATASTOREACL_ADMIN_ROLE)
+        auth(OBJECTACL_ADMIN_ROLE)
         onlyPermissionManager(_sender, _obj, _role)
     {
         _setObjectPermission(_entity, _obj, _role, true);
@@ -135,7 +135,7 @@ contract DatastoreACL is AragonApp, ACLHelpers {
     */
     function revokeObjectPermission(address _entity, bytes32 _obj, bytes32 _role, address _sender)
         public
-        auth(DATASTOREACL_ADMIN_ROLE)
+        auth(OBJECTACL_ADMIN_ROLE)
         onlyPermissionManager(_sender, _obj, _role)
     {
         _setObjectPermission(_entity, _obj, _role, false);
