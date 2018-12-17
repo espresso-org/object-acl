@@ -15,6 +15,9 @@ contract ObjectACL is AragonApp, ACLHelpers {
     mapping (bytes32 => mapping (bytes32 => bool)) internal objectPermissions; 
     mapping (bytes32 => address) internal objectPermissionManager;
 
+    // object => role => entities
+    mapping (bytes32 => mapping (bytes32 => address[])) internal objectPermissionEntities;
+
 
 
     modifier onlyPermissionManager(address _sender, bytes32 _obj, bytes32 _role) {
@@ -81,7 +84,24 @@ contract ObjectACL is AragonApp, ACLHelpers {
     function hasObjectPermission(address _entity, bytes32 _obj, bytes32 _role) public view returns (bool)
     {
         return objectPermissions[_obj][permissionHash(_entity, _role)];
-    }       
+    }    
+
+
+    function getObjectPermissionEntities(uint256 _obj, bytes32 _role) public view returns (address[])
+    {
+        return objectPermissionEntities[keccak256(_obj)][_role];
+    }          
+
+    /**
+    * @dev Returns the list of entities that have permission on an object
+    * @param _obj Object
+    * @param _role Identifier for the group of actions in app given access to perform
+    * @return address[] List of entities with access on `_obj`
+    */
+    function getObjectPermissionEntities(bytes32 _obj, bytes32 _role) public view returns (address[])
+    {
+        return objectPermissionEntities[_obj][_role];
+    }      
 
     /**
     * @dev Grants permission for role `_role` on object `_obj`, if allowed. 
@@ -169,6 +189,18 @@ contract ObjectACL is AragonApp, ACLHelpers {
     * @dev Internal function called to actually save the permission
     */
     function _setObjectPermission(address _entity, bytes32 _obj, bytes32 _role, bool _hasPermission) internal {
+
+        if (_hasPermission && !objectPermissions[_obj][permissionHash(_entity, _role)]) {
+            objectPermissionEntities[_obj][_role].push(_entity);
+        }
+        else {
+            // TODO: Optmize this section
+            for (uint256 i = 0; i < objectPermissionEntities[_obj][_role].length; i++) {
+                if (objectPermissionEntities[_obj][_role][i] == _entity)
+                    delete objectPermissionEntities[_obj][_role];
+            }
+        }
+
         objectPermissions[_obj][permissionHash(_entity, _role)] = _hasPermission;
 
         emit SetObjectPermission(_entity, _obj, _role, _hasPermission);
