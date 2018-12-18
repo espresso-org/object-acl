@@ -7,7 +7,7 @@ import '@aragon/os/contracts/apps/AragonApp.sol';
  * ObjectACL that keeps a reference of the entities address
  * for every object.
  */
-contract ObjectACL is AragonApp, ACLHelpers {
+contract ExtendedObjectACL is AragonApp, ACLHelpers {
 
     bytes32 public constant OBJECTACL_ADMIN_ROLE = keccak256("OBJECTACL_ADMIN_ROLE");
 
