@@ -23,3 +23,26 @@ objectAcl.createObjectPermission(
     manager
 );
 ```
+
+### Verify object permission
+
+```javascript
+bytes32 public constant OBJECT_ROLE = keccak256(abi.encodePacked("OBJECT_ROLE"));
+
+objectAcl.hasObjectPermission(
+    entity, 
+    keccak256(abi.encodePacked("object", 1)), 
+    OBJECT_ROLE
+);
+```
+
+### Get object's permission manager
+
+```javascript
+bytes32 public constant WRITE_ACCESS = keccak256(abi.encodePacked("WRITE_ACCESS"));
+
+objectAcl.getObjectPermissionManager(
+    keccak256(abi.encodePacked(34)), 
+    WRITE_ACCESS
+);
+```
