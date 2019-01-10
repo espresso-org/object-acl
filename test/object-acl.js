@@ -74,11 +74,25 @@ contract('ObjectACL ', accounts => {
             await assertEvent(objectACL, { event: 'SetObjectPermission' })
         }) 
 
+        it('grants permission manager to the right entity', async () => {
+            await objectACL.createObjectPermission(holder, 1, DUMMY_ROLE, root)
+                
+            assert.equal(await objectACL.getObjectPermissionManager.call(1, DUMMY_ROLE), root)
+            assert.notEqual(await objectACL.getObjectPermissionManager.call(1, DUMMY_ROLE), holder)
+        }) 
+        
+        it('grants permission to the right entity', async () => {
+            await objectACL.createObjectPermission(holder, 1, DUMMY_ROLE, root)
+                
+            assert.equal(await objectACL.hasObjectPermission.call(holder, 1, DUMMY_ROLE), true)
+            assert.notEqual(await objectACL.hasObjectPermission.call(root, 1, DUMMY_ROLE), true)
+        })           
+
     })
     
      
 
-    describe('revokeObjectPermission', async () => {
+    xdescribe('revokeObjectPermission', async () => {
         it('throws if not called the permission manager', async () => {
             await objectACL.createObjectPermission(root, 1, DUMMY_ROLE, root)
             assertThrow(async () => await objectACL.revokeObjectPermission(root, 1, DUMMY_ROLE, holder))
@@ -86,14 +100,14 @@ contract('ObjectACL ', accounts => {
       
     })   
     
-    describe('grantObjectPermission', async () => {
+    xdescribe('grantObjectPermission', async () => {
         it('throws if not called the permission manager', async () => {
             await objectACL.createObjectPermission(root, 1, DUMMY_ROLE, root)
             assertThrow(async () => objectACL.grantObjectPermission(root, 1, DUMMY_ROLE, holder), { from: holder} )
         })
     })   
     
-    describe('hasObjectPermission', async () => {
+    xdescribe('hasObjectPermission', async () => {
         it('returns the right permission', async () => {
             await objectACL.createObjectPermission(holder, 1, DUMMY_ROLE, root)
             assert.equal(await objectACL.hasObjectPermission.call(holder, 1, DUMMY_ROLE), true)
