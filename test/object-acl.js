@@ -49,11 +49,8 @@ contract('ObjectACL ', accounts => {
         const daclReceipt = await kernel.newAppInstance(await helper.apmNamehash("object-acl"), (await ObjectACL.new()).address, { from: holder })        
         objectACL = ObjectACL.at(daclReceipt.logs.filter(l => l.event == 'NewAppProxy')[0].args.proxy)
 
-        await acl.createPermission(datastore.address, objectACL.address, await objectACL.OBJECTACL_ADMIN_ROLE(), root)
-        await acl.grantPermission(root, objectACL.address, await objectACL.DATASTOREACL_ADMIN_ROLE())
-        await acl.createPermission(root, datastore.address, await datastore.DATASTORE_MANAGER_ROLE(), root)
-        await acl.grantPermission(root, datastore.address, await datastore.DATASTORE_MANAGER_ROLE())
-        await acl.grantPermission(holder, datastore.address, await datastore.DATASTORE_MANAGER_ROLE())
+        await acl.createPermission(root, objectACL.address, await objectACL.OBJECTACL_ADMIN_ROLE(), root)
+        await acl.grantPermission(root, objectACL.address, await objectACL.OBJECTACL_ADMIN_ROLE())
         
          
         await objectACL.initialize() 
