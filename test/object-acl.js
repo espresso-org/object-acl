@@ -92,22 +92,22 @@ contract('ObjectACL ', accounts => {
     
      
 
-    xdescribe('revokeObjectPermission', async () => {
+    describe('revokeObjectPermission', async () => {
         it('throws if not called the permission manager', async () => {
             await objectACL.createObjectPermission(root, 1, DUMMY_ROLE, root)
             assertThrow(async () => await objectACL.revokeObjectPermission(root, 1, DUMMY_ROLE, holder))
         })
-      
+   
     })   
     
-    xdescribe('grantObjectPermission', async () => {
+    describe('grantObjectPermission', async () => {
         it('throws if not called the permission manager', async () => {
             await objectACL.createObjectPermission(root, 1, DUMMY_ROLE, root)
             assertThrow(async () => objectACL.grantObjectPermission(root, 1, DUMMY_ROLE, holder), { from: holder} )
         })
     })   
     
-    xdescribe('hasObjectPermission', async () => {
+    describe('hasObjectPermission', async () => {
         it('returns the right permission', async () => {
             await objectACL.createObjectPermission(holder, 1, DUMMY_ROLE, root)
             assert.equal(await objectACL.hasObjectPermission.call(holder, 1, DUMMY_ROLE), true)
